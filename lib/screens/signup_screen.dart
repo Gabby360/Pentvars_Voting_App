@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../widgets/animated_gradient_background.dart';
+import '../widgets/animated_background.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _nameController = TextEditingController();
   final _authService = AuthService();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
@@ -22,11 +24,20 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleLogin() async {
+  Future<void> _handleSignup() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (_passwordController.text != _confirmPasswordController.text) {
+      setState(() {
+        _errorMessage = 'Passwords do not match';
+      });
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -34,23 +45,19 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final user = await _authService.signInWithEmailAndPassword(
+      final user = await _authService.signUpWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text.trim(),
+        _nameController.text.trim(),
       );
 
       if (user != null) {
-        if (user.role == 'admin') {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(context, '/admin');
-        } else {
-          if (!mounted) return;
-          Navigator.pushReplacementNamed(context, '/dashboard');
-        }
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, '/dashboard');
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid email or password')),
+          const SnackBar(content: Text('Failed to create account')),
         );
       }
     } catch (e) {
@@ -69,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedGradientBackground(
+      body: AnimatedBackground(
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(30),
@@ -86,9 +93,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: const Icon(
-                      Icons.person_outline_rounded,
+                      Icons.person_add_outlined,
                       size: 60,
                       color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const Text(
+                    'Create Account',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Sign up to start voting',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 40),
@@ -180,12 +204,44 @@ class _LoginScreenState extends State<LoginScreen> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    style: const TextStyle(color: Colors.white),
+                    obscureText: !_isPasswordVisible,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+                      prefixIcon: Icon(Icons.lock_outline, color: Colors.white.withOpacity(0.7)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 30),
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: FilledButton(
-                      onPressed: _isLoading ? null : _handleLogin,
+                      onPressed: _isLoading ? null : _handleSignup,
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xFF1a237e),
@@ -203,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             )
                           : const Text(
-                              'Login',
+                              'Sign Up',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -213,12 +269,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
                   TextButton(
-                    onPressed: () => Navigator.pushNamed(context, '/signup'),
+                    onPressed: () => Navigator.pushNamed(context, '/login'),
                     child: Text(
-                      'Don\'t have an account? Sign up',
+                      'Already have an account? Login',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.7),
-                        fontSize: 16,
                       ),
                     ),
                   ),
@@ -230,4 +285,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-} 
+}

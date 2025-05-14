@@ -1,36 +1,33 @@
 import 'package:flutter/material.dart';
 
-class AnimatedGradientBackground extends StatefulWidget {
+class AnimatedBackground extends StatefulWidget {
   final Widget child;
-
-  const AnimatedGradientBackground({
+  
+  const AnimatedBackground({
     super.key,
     required this.child,
   });
 
   @override
-  State<AnimatedGradientBackground> createState() => _AnimatedGradientBackgroundState();
+  State<AnimatedBackground> createState() => _AnimatedBackgroundState();
 }
 
-class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground> with SingleTickerProviderStateMixin {
+class _AnimatedBackgroundState extends State<AnimatedBackground> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<Alignment> _alignmentAnimation;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
+      duration: const Duration(seconds: 15),
       vsync: this,
-      duration: const Duration(seconds: 5),
-    )..repeat(reverse: true);
+    )..repeat();
 
-    _alignmentAnimation = Tween<Alignment>(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ).animate(CurvedAnimation(
+    _animation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeInOut,
-    ));
+    );
   }
 
   @override
@@ -42,25 +39,33 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _controller,
+      animation: _animation,
       builder: (context, child) {
         return Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: _alignmentAnimation.value,
-              end: Alignment.center,
-              colors: const [
-                Color(0xFF6C63FF),  // Original purple
-                Color(0xFF9575CD),  // Original light purple
-                Color(0xFF42A5F5),  // Original blue
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFF6C63FF),
+                const Color(0xFF9575CD),
+                const Color(0xFF42A5F5),
+                const Color(0xFF9575CD),
+                const Color(0xFF6C63FF),
               ],
-              stops: const [0.0, 0.5, 1.0],
+              stops: [
+                0.0,
+                _animation.value * 0.25,
+                _animation.value * 0.5,
+                _animation.value * 0.75,
+                1.0,
+              ],
+              transform: GradientRotation(_animation.value * 2 * 3.14159),
             ),
           ),
-          child: child,
+          child: widget.child,
         );
       },
-      child: widget.child,
     );
   }
 } 

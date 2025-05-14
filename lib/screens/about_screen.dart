@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/animated_background.dart';
+import '../widgets/animated_gradient_background.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});

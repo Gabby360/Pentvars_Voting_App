@@ -18,21 +18,50 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Pentvars Campus Vote - Secure Online Voting System">
 
   <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="voting_app">
+  <meta name="apple-mobile-web-app-title" content="campus_vote">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>voting_app</title>
+  <title>Pentvars Campus Vote</title>
   <link rel="manifest" href="manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = '{{flutter_service_worker_version}}';
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Check if we're on the admin route
+      const isAdminRoute = window.location.pathname.includes('/admin');
+      
+      // Download main.dart.js
+      _flutter.loader.load({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            // Pass the route information to Flutter
+            window.flutter_web_initializer = {
+              isAdminRoute: isAdminRoute
+            };
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+  <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>

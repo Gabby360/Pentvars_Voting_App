@@ -1,156 +1,221 @@
 import 'package:flutter/material.dart';
-import '../widgets/animated_background.dart';
+import '../widgets/animated_gradient_background.dart';
+import '../widgets/gradient_card.dart';
 
-class VoteConfirmationScreen extends StatefulWidget {
+class VoteConfirmationScreen extends StatelessWidget {
   const VoteConfirmationScreen({super.key});
-
-  @override
-  State<VoteConfirmationScreen> createState() => _VoteConfirmationScreenState();
-}
-
-class _VoteConfirmationScreenState extends State<VoteConfirmationScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.5, curve: Curves.elasticOut),
-      ),
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.3, 0.8, curve: Curves.easeIn),
-      ),
-    );
-
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.5), end: Offset.zero).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.3, 0.8, curve: Curves.easeOut),
-      ),
-    );
-
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedGradientBackground(
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ScaleTransition(
-                  scale: _scaleAnimation,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check_circle_outline_rounded,
-                      color: Colors.white,
-                      size: 100,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: SlideTransition(
-                    position: _slideAnimation,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Vote Submitted!',
-                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Column(
-                            children: [
-                              Text(
-                                'Thank you for making your voice heard.',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                'Your vote has been recorded successfully and will be counted in the final results.',
-                                style: TextStyle(color: Colors.white70),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 40),
-                        FilledButton.icon(
-                          style: FilledButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF6C63FF),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 40,
-                              vertical: 16,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.popUntil(context, ModalRoute.withName('/dashboard'));
-                          },
-                          icon: const Icon(Icons.dashboard_rounded),
-                          label: const Text(
-                            'Return to Dashboard',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: const Text(
+            'Confirm Your Vote',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GradientCard(    
+                opacity: 0.2,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Review Your Selections',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Please verify your choices before submitting',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              GradientCard(
+                child: Column(
+                  children: [
+                    _buildConfirmationItem(
+                      'President',
+                      'John Smith',
+                      'P1',
+                    ),
+                    const Divider(color: Colors.white10, height: 30),
+                    _buildConfirmationItem(
+                      'Secretary',
+                      'Emily Davis',
+                      'S1',
+                    ),
+                    const Divider(color: Colors.white10, height: 30),
+                    _buildConfirmationItem(
+                      'Treasurer',
+                      'James Miller',
+                      'T1',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              GradientCard(
+                opacity: 0.15,
+                child: Column(
+                  children: [
+                    const Text(
+                      'Important Notice',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      'By submitting your vote, you confirm that these are your final choices. You cannot change your vote after submission.',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.7),
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.white.withOpacity(0.1),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 60),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Text(
+                        'Go Back',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: FilledButton(
+                      onPressed: () => Navigator.pushReplacementNamed(context, '/thank-you'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF1a237e),
+                        minimumSize: const Size(double.infinity, 60),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Text(
+                        'Submit Vote',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildConfirmationItem(String position, String name, String id) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                position,
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            'ID: $id',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
     );
   }
 } 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/animated_background.dart';
+import '../widgets/animated_gradient_background.dart';
+import '../widgets/gradient_card.dart';
 
 class VotingScreen extends StatefulWidget {
   const VotingScreen({super.key});
@@ -18,19 +19,19 @@ class _VotingScreenState extends State<VotingScreen> with SingleTickerProviderSt
   
   final candidates = {
     'President': [
-      {'name': 'John Smith', 'id': 'P1', 'votes': '245', 'bio': 'Dedicated to bringing positive change'},
-      {'name': 'Sarah Johnson', 'id': 'P2', 'votes': '189', 'bio': 'Fighting for student rights'},
-      {'name': 'Michael Brown', 'id': 'P3', 'votes': '156', 'bio': 'Building a better campus'},
+      {'name': 'John Smith', 'id': 'P1', 'bio': 'Dedicated to bringing positive change'},
+      {'name': 'Sarah Johnson', 'id': 'P2', 'bio': 'Fighting for student rights'},
+      {'name': 'Michael Brown', 'id': 'P3', 'bio': 'Building a better campus'},
     ],
     'Secretary': [
-      {'name': 'Emily Davis', 'id': 'S1', 'votes': '178', 'bio': 'Organized and efficient'},
-      {'name': 'David Wilson', 'id': 'S2', 'votes': '165', 'bio': 'Your voice matters'},
-      {'name': 'Lisa Anderson', 'id': 'S3', 'votes': '143', 'bio': 'Experience that counts'},
+      {'name': 'Emily Davis', 'id': 'S1', 'bio': 'Organized and efficient'},
+      {'name': 'David Wilson', 'id': 'S2', 'bio': 'Your voice matters'},
+      {'name': 'Lisa Anderson', 'id': 'S3', 'bio': 'Experience that counts'},
     ],
     'Treasurer': [
-      {'name': 'James Miller', 'id': 'T1', 'votes': '198', 'bio': 'Managing with integrity'},
-      {'name': 'Emma White', 'id': 'T2', 'votes': '167', 'bio': 'Transparent leadership'},
-      {'name': 'Robert Taylor', 'id': 'T3', 'votes': '145', 'bio': 'Financial expertise'},
+      {'name': 'James Miller', 'id': 'T1', 'bio': 'Managing with integrity'},
+      {'name': 'Emma White', 'id': 'T2', 'bio': 'Transparent leadership'},
+      {'name': 'Robert Taylor', 'id': 'T3', 'bio': 'Financial expertise'},
     ],
   };
 
@@ -67,277 +68,85 @@ class _VotingScreenState extends State<VotingScreen> with SingleTickerProviderSt
       context: context,
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF6C63FF).withOpacity(0.95),
-                const Color(0xFF9575CD).withOpacity(0.95),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.3)),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF42A5F5).withOpacity(0.3),
-                blurRadius: 10,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Select $position',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 20),
-              ...candidates[position]!.map((candidate) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        selectedCandidates[position] = candidate['id']!;
-                      });
-                      Navigator.pop(context);
-                    },
-                    borderRadius: BorderRadius.circular(15),
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: selectedCandidates[position] == candidate['id']
-                            ? const Color(0xFF6C63FF).withOpacity(0.6)
-                            : const Color(0xFF9575CD).withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(
-                          color: selectedCandidates[position] == candidate['id']
-                              ? Colors.white.withOpacity(0.6)
-                              : Colors.white.withOpacity(0.3),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF42A5F5).withOpacity(0.2),
-                            blurRadius: 5,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              candidate['name']![0],
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  candidate['name']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  candidate['bio']!,
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              '${candidate['votes']} votes',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+        child: GradientCard(
+            padding: const EdgeInsets.all(25),
+          opacity: 0.15,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Select $position',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-              )).toList(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _showConfirmationDialog() {
-    if (selectedCandidates.length != positions.length) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Please select all positions'),
-          backgroundColor: Colors.white.withOpacity(0.1),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                const Color(0xFF6C63FF).withOpacity(0.95),
-                const Color(0xFF9575CD).withOpacity(0.95),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.3)),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF42A5F5).withOpacity(0.3),
-                blurRadius: 10,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Confirm Your Vote',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 20),
-              ...positions.map((position) {
-                final candidateId = selectedCandidates[position];
-                final candidate = candidates[position]!.firstWhere(
-                  (c) => c['id'] == candidateId,
-                );
-                return Padding(
+                const SizedBox(height: 25),
+                ...candidates[position]!.map((candidate) => Padding(
                   padding: const EdgeInsets.only(bottom: 15),
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF9575CD).withOpacity(0.4),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedCandidates[position] = candidate['id']!;
+                        });
+                        Navigator.pop(context);
+                      },
                       borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            position[0],
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 15),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                position,
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.7),
-                                  fontSize: 14,
-                                ),
+                    child: GradientCard(
+                        padding: const EdgeInsets.all(20),
+                      opacity: 0.1,
+                      hasBorder: selectedCandidates[position] == candidate['id'],
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.1),
+                                shape: BoxShape.circle,
                               ),
-                              const SizedBox(height: 5),
-                              Text(
-                                candidate['name']!,
+                              child: Text(
+                                candidate['name']![0],
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                                  fontSize: 18,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    candidate['name']!,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    candidate['bio']!,
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.7),
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      'Edit',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  FilledButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(context, '/confirmation');
-                    },
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF6C63FF),
-                    ),
-                    child: const Text('Confirm Vote'),
-                  ),
-                ],
-              ),
-            ],
+                )),
+              ],
           ),
         ),
       ),
@@ -355,45 +164,36 @@ class _VotingScreenState extends State<VotingScreen> with SingleTickerProviderSt
             'Cast Your Vote',
             style: TextStyle(
               color: Colors.white,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
         body: FadeTransition(
           opacity: _fadeAnimation,
           child: SlideTransition(
             position: _slideAnimation,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color(0xFF6C63FF).withOpacity(0.95),
-                          const Color(0xFF9575CD).withOpacity(0.95),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                      ),
-                    ),
+                  GradientCard(
+                    opacity: 0.2,
                     child: Row(
                       children: [
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white.withOpacity(0.1),
+                            shape: BoxShape.circle,
                           ),
                           child: const Icon(
-                            Icons.how_to_vote_rounded,
+                            Icons.how_to_vote,
                             color: Colors.white,
                             size: 24,
                           ),
@@ -404,19 +204,19 @@ class _VotingScreenState extends State<VotingScreen> with SingleTickerProviderSt
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Make Your Choice',
+                                'Student Council Election 2024',
                                 style: TextStyle(
                                   color: Colors.white,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
                                 ),
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                'Select one candidate for each position',
+                                'Select your candidates for each position',
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.7),
-                                  fontSize: 14,
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -425,162 +225,82 @@ class _VotingScreenState extends State<VotingScreen> with SingleTickerProviderSt
                       ],
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: positions.length,
-                      itemBuilder: (context, index) {
-                        final position = positions[index];
-                        final isSelected = selectedCandidates.containsKey(position);
-                        final selectedId = selectedCandidates[position];
-                        final selectedCandidate = isSelected
-                            ? candidates[position]!.firstWhere(
-                                (c) => c['id'] == selectedId,
-                              )
-                            : null;
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => _showCandidatesDialog(position),
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      const Color(0xFF6C63FF).withOpacity(0.3),
-                                      const Color(0xFF9575CD).withOpacity(0.3),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? Colors.white.withOpacity(0.3)
-                                        : Colors.white.withOpacity(0.1),
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.2),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Text(
-                                            position[0],
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 15),
-                                        Text(
-                                          position,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
+                  const SizedBox(height: 30),
+                  ...positions.map((position) => Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                    child: GradientCard(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                    Text(
+                                      position,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                              fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                    if (isSelected) ...[
-                                      const SizedBox(height: 15),
-                                      Container(
-                                        padding: const EdgeInsets.all(15),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(15),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              padding: const EdgeInsets.all(8),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white.withOpacity(0.2),
-                                                shape: BoxShape.circle,
+                          const SizedBox(height: 15),
+                          if (selectedCandidates[position] != null)
+                            Row(
+                                      children: [
+                                        Expanded(
+                                  child: Text(
+                                    candidates[position]!
+                                        .firstWhere((c) => c['id'] == selectedCandidates[position])['name']!,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                ),
                                               ),
-                                              child: const Icon(
-                                                Icons.check_rounded,
-                                                color: Colors.white,
-                                                size: 16,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 15),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    selectedCandidate!['name']!,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  Text(
-                                                    selectedCandidate['bio']!,
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                          .withOpacity(0.7),
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ] else ...[
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        'Tap to select a candidate',
-                                        style: TextStyle(
-                                          color: Colors.white.withOpacity(0.7),
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.edit, color: Colors.white),
+                                  onPressed: () => _showCandidatesDialog(position),
+                                ),
+                              ],
+                            )
+                          else
+                            FilledButton(
+                              onPressed: () => _showCandidatesDialog(position),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF1a237e),
+                                minimumSize: const Size(double.infinity, 50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
+                              child: const Text(
+                                'Select Candidate',
+                                    style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                             ),
                           ),
-                        );
-                      },
+                        ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: _showConfirmationDialog,
+                  )),
+                  const SizedBox(height: 30),
+                  FilledButton(
+                    onPressed: selectedCandidates.length == positions.length
+                        ? () => Navigator.pushNamed(context, '/vote-confirmation')
+                        : null,
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF6C63FF),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                      foregroundColor: const Color(0xFF1a237e),
+                      minimumSize: const Size(double.infinity, 60),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      child: Text(
-                        selectedCandidates.length == positions.length
-                            ? 'Review and Submit'
-                            : 'Select All Positions (${selectedCandidates.length}/${positions.length})',
+                    child: const Text(
+                      'Submit Vote',
+                      style: TextStyle(
+                        fontSize: 18,
+                          fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
